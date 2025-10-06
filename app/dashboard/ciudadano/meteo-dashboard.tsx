@@ -15,21 +15,21 @@ interface MeteoDashboardProps {
 
 export default function MeteoDashboard({ items }: MeteoDashboardProps) {
   const mapRef = useRef<HTMLDivElement>(null);
+  const mapInstanceRef = useRef<any>(null); // Ref para la instancia del mapa
   const [airData, setAirData] = useState<Array<{ parametro: string; valor: number | string; unidad: string }>>([]);
+  const [showMap, setShowMap] = useState(true);
 
   useEffect(() => {
+    if (!showMap) return;
     let leafletLoaded = false;
-    let mapInstance: any = null;
     const mapDiv = mapRef.current;
     // Carga Leaflet solo en el cliente
     if (typeof window !== "undefined" && mapDiv) {
-      // Cargar scripts y estilos Leaflet dinámicamente
       if (!window.L) {
         const leafletCss = document.createElement("link");
         leafletCss.rel = "stylesheet";
         leafletCss.href = "https://unpkg.com/leaflet@1.9.3/dist/leaflet.css";
         document.head.appendChild(leafletCss);
-
         const leafletScript = document.createElement("script");
         leafletScript.src = "https://unpkg.com/leaflet@1.9.3/dist/leaflet.js";
         leafletScript.async = true;
@@ -47,41 +47,45 @@ export default function MeteoDashboard({ items }: MeteoDashboardProps) {
     function initMap() {
       if (!window.L || !mapDiv) return;
       const API_KEY = "b76a2862d586e02a39e13de8b6fac76f";
-      // Evita doble inicialización
-      if (mapDiv.childNodes.length === 0) {
-        mapInstance = window.L.map(mapDiv).setView([-16.409, -71.5375], 8);
-        const base = window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          maxZoom: 18,
-          attribution: '© OpenStreetMap'
-        }).addTo(mapInstance);
-        // Capas meteorológicas
-        const temp = window.L.tileLayer(`https://maps.openweathermap.org/maps/2.0/weather/TA2/{z}/{x}/{y}?fill_bound=true&opacity=0.7&palette=-65:821692;-30:208cec;-10:20c4e8;0:23dddd;10:c2ff28;20:fff028;30:fc8014&appid=${API_KEY}`);
-        const viento = window.L.tileLayer(`https://maps.openweathermap.org/maps/2.0/weather/WND/{z}/{x}/{y}?use_norm=true&arrow_step=16&appid=${API_KEY}`);
-        const nubes = window.L.tileLayer(`https://maps.openweathermap.org/maps/2.0/weather/CL/{z}/{x}/{y}?opacity=0.6&appid=${API_KEY}`);
-        const lluvia = window.L.tileLayer(`https://maps.openweathermap.org/maps/2.0/weather/PR0/{z}/{x}/{y}?opacity=0.6&appid=${API_KEY}`);
-        const humedad = window.L.tileLayer(`https://maps.openweathermap.org/maps/2.0/weather/HRD0/{z}/{x}/{y}?opacity=0.6&appid=${API_KEY}`);
-        const presion = window.L.tileLayer(`https://maps.openweathermap.org/maps/2.0/weather/APM/{z}/{x}/{y}?opacity=0.6&appid=${API_KEY}`);
-        const baseMaps = { "OpenStreetMap": base };
-        const overlayMaps = {
-          "🌡️ Temperatura": temp,
-          "💨 Viento": viento,
-          "☁️ Nubes": nubes,
-          "🌧️ Precipitación": lluvia,
-          "💧 Humedad": humedad,
-          "⚙️ Presión": presion
-        };
-        window.L.control.layers(baseMaps, overlayMaps, { collapsed: false }).addTo(mapInstance);
+      // Si ya existe una instancia, la eliminamos
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
       }
+      mapDiv.innerHTML = "";
+      mapInstanceRef.current = window.L.map(mapDiv).setView([-16.409, -71.5375], 8);
+      const base = window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: '© OpenStreetMap'
+      }).addTo(mapInstanceRef.current);
+      // Capas meteorológicas
+      const temp = window.L.tileLayer(`https://maps.openweathermap.org/maps/2.0/weather/TA2/{z}/{x}/{y}?fill_bound=true&opacity=0.7&palette=-65:821692;-30:208cec;-10:20c4e8;0:23dddd;10:c2ff28;20:fff028;30:fc8014&appid=${API_KEY}`);
+      const viento = window.L.tileLayer(`https://maps.openweathermap.org/maps/2.0/weather/WND/{z}/{x}/{y}?use_norm=true&arrow_step=16&appid=${API_KEY}`);
+      const nubes = window.L.tileLayer(`https://maps.openweathermap.org/maps/2.0/weather/CL/{z}/{x}/{y}?opacity=0.6&appid=${API_KEY}`);
+      const lluvia = window.L.tileLayer(`https://maps.openweathermap.org/maps/2.0/weather/PR0/{z}/{x}/{y}?opacity=0.6&appid=${API_KEY}`);
+      const humedad = window.L.tileLayer(`https://maps.openweathermap.org/maps/2.0/weather/HRD0/{z}/{x}/{y}?opacity=0.6&appid=${API_KEY}`);
+      const presion = window.L.tileLayer(`https://maps.openweathermap.org/maps/2.0/weather/APM/{z}/{x}/{y}?opacity=0.6&appid=${API_KEY}`);
+      const baseMaps = { "OpenStreetMap": base };
+      const overlayMaps = {
+        "🌡️ Temperatura": temp,
+        "💨 Viento": viento,
+        "☁️ Nubes": nubes,
+        "🌧️ Precipitación": lluvia,
+        "💧 Humedad": humedad,
+        "⚙️ Presión": presion
+      };
+      window.L.control.layers(baseMaps, overlayMaps, { collapsed: false }).addTo(mapInstanceRef.current);
     }
+
     // Limpieza al desmontar
     return () => {
-      if (mapInstance && mapInstance.remove) {
-        mapInstance.remove();
-      } else if (mapDiv) {
-        mapDiv.innerHTML = "";
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
       }
+      if (mapDiv) mapDiv.innerHTML = "";
     };
-  }, []);
+  }, [showMap]);
 
   useEffect(() => {
     // API de contaminantes del aire
@@ -113,14 +117,24 @@ export default function MeteoDashboard({ items }: MeteoDashboardProps) {
       <div className="flex flex-row h-[calc(100vh-64px)]">
         {showSidebar && (
           <div className="w-80 bg-card p-6 flex flex-col gap-4 border-r border-muted">
+            <button
+              className="w-full mb-2 bg-primary text-primary-foreground rounded px-4 py-2 font-semibold hover:bg-primary/90 transition"
+              onClick={() => setShowMap(true)}
+            >
+              Ver mapa
+            </button>
             <Card>
               <CardHeader>
                 <CardTitle>Panel de Controles</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
-                  <button className="w-full bg-primary text-primary-foreground rounded px-4 py-2 font-semibold hover:bg-primary/90 transition">Ver pronóstico</button>
-                  <button className="w-full bg-secondary text-secondary-foreground rounded px-4 py-2 font-semibold hover:bg-secondary/90 transition">Ver calidad de aire</button>
+                  <button
+                    className="w-full bg-secondary text-secondary-foreground rounded px-4 py-2 font-semibold hover:bg-secondary/90 transition"
+                    onClick={() => setShowMap(false)}
+                  >
+                    Ver calidad de aire
+                  </button>
                   <button className="w-full bg-muted text-muted-foreground rounded px-4 py-2 font-semibold hover:bg-muted/90 transition">Alertas</button>
                 </div>
               </CardContent>
@@ -154,8 +168,11 @@ export default function MeteoDashboard({ items }: MeteoDashboardProps) {
               <button className="bg-primary text-primary-foreground rounded px-3 py-1 font-semibold hover:bg-primary/90 transition">Actualizar</button>
             </div>
           </div>
-          <div ref={mapRef} id="map" style={{ width: "100%", height: "600px", borderRadius: "16px", marginTop: "64px", boxShadow: "0 2px 16px #0002" }} />
-          <div className="w-full max-w-xl mx-auto mt-8">
+          {/* Mostrar ambos cuadros, pero solo uno visible según showMap */}
+          <div className={showMap ? "block w-full" : "hidden w-full"}>
+            <div ref={mapRef} id="map" style={{ width: "100%", height: "600px", borderRadius: "16px", marginTop: "64px", boxShadow: "0 2px 16px #0002" }} />
+          </div>
+          <div className={!showMap ? "block w-full max-w-xl mx-auto mt-8" : "hidden w-full max-w-xl mx-auto mt-8"}>
             <Card>
               <CardHeader>
                 <CardTitle>💨 Contaminantes del aire en Arequipa</CardTitle>
