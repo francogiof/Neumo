@@ -241,24 +241,56 @@ export default function MeteoDashboard({ items }: MeteoDashboardProps) {
               </CardHeader>
               <CardContent>
                 {meteoData.length > 0 ? (
-                  <table className="w-full text-sm border rounded overflow-hidden">
-                    <thead>
-                      <tr className="bg-muted">
-                        {Object.keys(meteoData[0]).map((key) => (
-                          <th key={key} className="py-2 px-3 text-left">{key}</th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {meteoData.map((row, idx) => (
-                        <tr key={idx} className="border-b">
-                          {Object.values(row).map((val, i) => (
-                            <td key={i} className="py-2 px-3">{String(val)}</td>
-                          ))}
+                  <>
+                    {/* Tabla 1: Temperatura y humedad */}
+                    <table className="w-full text-sm border rounded overflow-hidden mb-6">
+                      <thead>
+                        <tr className="bg-muted">
+                          <th className="py-2 px-3 text-left">Hora</th>
+                          <th className="py-2 px-3 text-left">Temperatura (°C)</th>
+                          <th className="py-2 px-3 text-left">Sensación térmica (°C)</th>
+                          <th className="py-2 px-3 text-left">Temperatura mínima (°C)</th>
+                          <th className="py-2 px-3 text-left">Temperatura máxima (°C)</th>
+                          <th className="py-2 px-3 text-left">Humedad (%)</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody>
+                        {meteoData.map((row, idx) => (
+                          <tr key={idx} className="border-b">
+                            <td className="py-2 px-3">{String(row["Hora"])}</td>
+                            <td className="py-2 px-3">{String(row["Temperatura (°C)"])}</td>
+                            <td className="py-2 px-3">{String(row["Sensación térmica (°C)"])}</td>
+                            <td className="py-2 px-3">{String(row["Temperatura mínima (°C)"])}</td>
+                            <td className="py-2 px-3">{String(row["Temperatura máxima (°C)"])}</td>
+                            <td className="py-2 px-3">{String(row["Humedad (%)"])}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                    {/* Tabla 2: Presión, viento, nubosidad, visibilidad */}
+                    <table className="w-full text-sm border rounded overflow-hidden">
+                      <thead>
+                        <tr className="bg-muted">
+                          <th className="py-2 px-3 text-left">Presión (hPa)</th>
+                          <th className="py-2 px-3 text-left">Velocidad viento (m/s)</th>
+                          <th className="py-2 px-3 text-left">Dirección viento (°)</th>
+                          <th className="py-2 px-3 text-left">Nubosidad (%)</th>
+                          <th className="py-2 px-3 text-left">Visibilidad (m)</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {meteoData.map((row, idx) => (
+                          <tr key={idx} className="border-b">
+                            <td className="py-2 px-3">{String(row["Presión (hPa)"])}</td>
+                            <td className="py-2 px-3">{String(row["Velocidad viento (m/s)"])}</td>
+                            <td className="py-2 px-3">{String(row["Dirección viento (°)"])}</td>
+                            <td className="py-2 px-3">{String(row["Nubosidad (%)"])}</td>
+                            <td className="py-2 px-3">{String(row["Visibilidad (m)"])}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </>
                 ) : (
                   <div className="text-center text-muted-foreground">No hay datos meteorológicos disponibles.</div>
                 )}
