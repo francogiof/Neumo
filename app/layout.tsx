@@ -8,8 +8,8 @@ import { Provider } from "./provider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "SamanthaAI",
-  description: "A Multi-tenant Next.js Starter Template",
+  title: "Neumo",
+  description: "Neumo — Plataforma de predicción y alertas de calidad del aire",
 };
 
 export default function RootLayout({

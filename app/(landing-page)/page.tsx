@@ -1,6 +1,5 @@
 import { FeatureGrid } from "@/components/features";
 import { Hero } from "@/components/hero";
-import { PricingGrid } from "@/components/pricing";
 import { stackServerApp } from "@/stack";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { ComponentIcon, Users } from "lucide-react";
@@ -28,109 +27,61 @@ export default async function IndexPage() {
       <div className="relative">
         <Waves />
         <Hero
-          capsuleText="SamanthaAI – Autonomous Hiring for Tech Teams"
+          capsuleText="AireLocal — Pronóstico y Alertas de Calidad del Aire"
           capsuleLink="/"
-          title="SamanthaAI: Fast, Fair, and Explainable Technical Hiring."
-          subtitle="Automate interviews, scoring, and decisions with modular AI agents."
-          primaryCtaText="🚀 Try SamanthaAI Demo"
+          title="AireLocal: predice y reduce tu exposición a la contaminación atmosférica."
+          subtitle="Integramos datos TEMPO (satélite), estaciones en tierra (OpenAQ/Pandora) y meteorología para generar predicciones locales y alertas de salud pública." 
+          primaryCtaText="🌤️ Ver Predicciones Locales"
           primaryCtaLink={stackServerApp.urls.signUp}
-          secondaryCtaText="🧠 View on GitHub"
-          secondaryCtaLink="https://github.com/stack-auth/stack-template"
+          secondaryCtaText="📚 Recursos y Datos"
+          secondaryCtaLink="/resources"
           credits={
-            <>Purpose-built for engineering recruitment. Open-source, auditable, and developer-first.</>
+            <>
+              Datos de TMPO/Temporales, OpenAQ, y fuentes meteorológicas. Gratis para uso público; cite las fuentes.
+            </>
           }
         />
       </div>
 
       <div id="features" />
       <FeatureGrid
-        title="Revolutionize Technical Hiring with SamanthaAI"
-        subtitle="Automate every stage—from CV parsing to technical interviews—with explainable, auditable AI agents."
+        title="Pronóstico y Vigilancia de Calidad del Aire"
+        subtitle="Combina datos de TEMPO, estaciones en tierra y meteorología para ofrecer pronósticos locales, visualizaciones claras y alertas de salud pública."
         items={[
           {
-            icon: <span className="text-3xl">🤖</span>,
-            title: "Multi-Agent Interview System",
-            description: "Specialized agents handle CV parsing, interviews, scoring, and reporting in one pipeline.",
+            icon: <span className="text-3xl">🛰️</span>,
+            title: "Integración TEMPO (Satélite)",
+            description: "Ingesta de productos TEMPO en tiempo real para estimar columnas de contaminantes y tendencias espaciales.",
           },
           {
-            icon: <span className="text-3xl">📄</span>,
-            title: "Automated CV Parsing & Profiling",
-            description: "Extract skills and experience from resumes, instantly match to job requirements.",
+            icon: <span className="text-3xl">�</span>,
+            title: "Mediciones en Tierra (OpenAQ / Pandora)",
+            description: "Validación cruzada y ajuste local usando redes de estaciones para mejorar la precisión del pronóstico.",
           },
           {
-            icon: <span className="text-3xl">🧪</span>,
-            title: "Dynamic Technical Evaluation",
-            description: "Ask job-specific questions, auto-grade answers, and compute performance in real time.",
+            icon: <span className="text-3xl">☁️</span>,
+            title: "Datos Meteorológicos",
+            description: "Viento, temperatura y estabilidad atmosférica para modelar transporte y dispersión de contaminantes.",
           },
           {
-            icon: <span className="text-3xl">📊</span>,
-            title: "Transparent Scoring & Reporting",
-            description: "Every answer and decision is logged, stored, and fully explainable.",
+            icon: <span className="text-3xl">�</span>,
+            title: "Pronósticos Locales",
+            description: "Modelos simples y pipelines de fusión de datos que generan predicciones de AQI a nivel de barrio.",
           },
           {
-            icon: <span className="text-3xl">🔍</span>,
-            title: "Bias Reduction by Design",
-            description: "Agents use only relevant data and ideal answers for fairer outcomes.",
+            icon: <span className="text-3xl">�</span>,
+            title: "Alertas y Notificaciones",
+            description: "Alertas proactivas cuando se esperan niveles perjudiciales para grupos sensibles; configurable por área y umbral.",
           },
           {
-            icon: <span className="text-3xl">🔁</span>,
-            title: "Self-Improving System",
-            description: "Continuous improvement via feedback loops and model fine-tuning.",
+            icon: <span className="text-3xl">�️</span>,
+            title: "Visualizaciones Claras",
+            description: "Mapas de calor, series temporales y paneles de comparación entre satélite y estaciones para comunicación pública.",
           },
         ]}
       />
 
-      <div id="pricing" />
-      <PricingGrid
-        title="Pricing"
-        subtitle="Simple, scalable plans for every team."
-        items={[
-          {
-            title: "Starter",
-            price: "$0/mo",
-            description: "For evaluation, pilots, and small-scale hiring automation.",
-            features: [
-              "Full source code (self-hostable)",
-              "1 active job role",
-              "Hasta 5 evaluaciones de ciudadanos/mes",
-              "Community support via GitHub",
-              "No credit card required",
-            ],
-            buttonText: "Get Started",
-            buttonHref: stackServerApp.urls.signUp,
-          },
-          {
-            title: "Growth",
-            price: "Custom",
-            description: "For growing teams with consistent hiring needs.",
-            features: [
-              "Unlimited job roles",
-              "Hasta 200 evaluaciones de ciudadanos/mes",
-              "Scoring dashboard & audit logs",
-              "Priority email support",
-              "API access for ATS/HR integrations",
-            ],
-            buttonText: "Contact Sales",
-            isPopular: true,
-            buttonHref: stackServerApp.urls.signUp,
-          },
-          {
-            title: "Enterprise",
-            price: "Custom",
-            description: "For platforms, consultancies, or large organizations.",
-            features: [
-              "Everything in Growth tier",
-              "Multi-tenant & RBAC",
-              "Dedicated support & onboarding",
-              "Custom agent workflows & private LLMs",
-              "On-premise or VPC deployment",
-              "SLA-backed uptime & compliance",
-            ],
-            buttonText: "Contact Sales",
-            buttonHref: stackServerApp.urls.signUp,
-          },
-        ]}
-      />
+      
     </>
   );
 }

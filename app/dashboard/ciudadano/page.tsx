@@ -62,7 +62,7 @@ const defaultJobOffers = [
 	{
 		id: 3,
 		title: "Desarrollador Fullstack (Simulado)",
-		company: "SamanthaAI Premium",
+			company: "Neumo Premium",
 		status: "Modo Práctica",
 		appliedAt: "2025-06-15",
 		premium: true,
@@ -114,7 +114,7 @@ export default function CiudadanoDashboard() {
 			{
 				id: Date.now(),
 				title: `Simulado: ${newSimUrl}`,
-				company: "Agente SamanthaAI",
+				company: "Agente Neumo",
 				status: "Modo Práctica",
 				appliedAt: new Date().toISOString().slice(0, 10),
 				premium: false,
@@ -167,7 +167,7 @@ export default function CiudadanoDashboard() {
 				<Card className="col-span-1 md:col-span-2 lg:col-span-1">
 					<CardHeader>
 						<CardTitle>Simular un Proceso de Oferta de Trabajo</CardTitle>
-						<CardDescription>Pega un enlace de oferta de trabajo para practicar un proceso de contratación simulado impulsado por agentes SamanthaAI.</CardDescription>
+						<CardDescription>Pega un enlace de oferta de trabajo para practicar un proceso de contratación simulado impulsado por agentes Neumo.</CardDescription>
 					</CardHeader>
 					<CardContent>
 						<form onSubmit={handleSimulateSubmit} className="flex flex-col gap-2">
@@ -193,7 +193,7 @@ export default function CiudadanoDashboard() {
 					<CardContent>
 						<div className="flex flex-col gap-2">
 							<Card className="p-3 border bg-muted/50">
-								<div className="font-semibold">Ingeniero Fullstack en SamanthaAI (Premium)</div>
+								<div className="font-semibold">Ingeniero Fullstack en Neumo (Premium)</div>
 								<div className="text-xs text-muted-foreground">Incluye interacciones avanzadas con agentes, entrevistas de múltiples etapas y reportes de retroalimentación.</div>
 							</Card>
 							<Card className="p-3 border bg-muted/50">

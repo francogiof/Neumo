@@ -8,13 +8,12 @@ export default function Layout(props: { children: React.ReactNode }) {
         items={[
           { title: "Home", href: "/" },
           { title: "Features", href: "/#features" },
-          { title: "Pricing", href: "/#pricing" },
           { title: "Github", href: "https://github.com/stack-auth/stack-template", external: true },
         ]}
       />
-      <main className="flex-1">{props.children}</main>
+  <main className="flex-1">{props.children}</main>
       <Footer
-        builtBy="SamanthaAI ®  All rights reserved."
+        builtBy="Neumo ®  All rights reserved."
         builtByLink="https://stack-auth.com/"
         githubLink="https://github.com/stack-auth/stack-template"
         twitterLink="https://twitter.com/stack_auth"
