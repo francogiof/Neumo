@@ -135,6 +135,12 @@ export default function MeteoDashboard({ items }: MeteoDashboardProps) {
                   >
                     Ver calidad de aire
                   </button>
+                  <button
+                    className="w-full bg-accent text-accent-foreground rounded px-4 py-2 font-semibold hover:bg-accent/90 transition"
+                    // onClick={() => ...} // lógica futura para datos meteorológicos
+                  >
+                    Datos meteorológicos
+                  </button>
                   <button className="w-full bg-muted text-muted-foreground rounded px-4 py-2 font-semibold hover:bg-muted/90 transition">Alertas</button>
                 </div>
               </CardContent>
