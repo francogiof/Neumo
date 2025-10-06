@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import SidebarLayout, { SidebarItem } from "@/components/sidebar-layout";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
@@ -15,6 +15,7 @@ interface MeteoDashboardProps {
 
 export default function MeteoDashboard({ items }: MeteoDashboardProps) {
   const mapRef = useRef<HTMLDivElement>(null);
+  const [airData, setAirData] = useState<Array<{ parametro: string; valor: number | string; unidad: string }>>([]);
 
   useEffect(() => {
     let leafletLoaded = false;
@@ -82,6 +83,29 @@ export default function MeteoDashboard({ items }: MeteoDashboardProps) {
     };
   }, []);
 
+  useEffect(() => {
+    // API de contaminantes del aire
+    const API_KEY = "b76a2862d586e02a39e13de8b6fac76f";
+    const lat = -16.3989;
+    const lon = -71.5350;
+    fetch(`https://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${API_KEY}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.list && data.list.length > 0) {
+          const components = data.list[0].components;
+          const result = Object.entries(components).map(([k, v]) => ({
+            parametro: k.toUpperCase(),
+            valor: typeof v === "number" ? v : Number(v),
+            unidad: "µg/m³"
+          }));
+          setAirData(result);
+        } else {
+          setAirData([{ parametro: "N/A", valor: "N/A", unidad: "N/A" }]);
+        }
+      })
+      .catch(() => setAirData([{ parametro: "N/A", valor: "N/A", unidad: "N/A" }]));
+  }, []);
+
   const showSidebar = Array.isArray(items) && items.length > 0;
 
   return (
@@ -131,6 +155,33 @@ export default function MeteoDashboard({ items }: MeteoDashboardProps) {
             </div>
           </div>
           <div ref={mapRef} id="map" style={{ width: "100%", height: "600px", borderRadius: "16px", marginTop: "64px", boxShadow: "0 2px 16px #0002" }} />
+          <div className="w-full max-w-xl mx-auto mt-8">
+            <Card>
+              <CardHeader>
+                <CardTitle>💨 Contaminantes del aire en Arequipa</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <table className="w-full text-sm border rounded overflow-hidden">
+                  <thead>
+                    <tr className="bg-muted">
+                      <th className="py-2 px-3 text-left">Parámetro</th>
+                      <th className="py-2 px-3 text-left">Valor</th>
+                      <th className="py-2 px-3 text-left">Unidad</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {airData.map((row, idx) => (
+                      <tr key={idx} className="border-b">
+                        <td className="py-2 px-3 font-semibold">{row.parametro}</td>
+                        <td className="py-2 px-3">{row.valor}</td>
+                        <td className="py-2 px-3">{row.unidad}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
     </SidebarLayout>
