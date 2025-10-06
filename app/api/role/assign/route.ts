@@ -6,7 +6,7 @@ import db from '@/lib/db';
 export async function POST(req: NextRequest) {
   try {
     const { stackAuthId, role } = await req.json();
-    if (!stackAuthId || !role || !['candidate', 'team-leader'].includes(role)) {
+    if (!stackAuthId || !role || !['ciudadano', 'institucion'].includes(role)) {
       return NextResponse.json({ error: 'Invalid input' }, { status: 400 });
     }
     // Prevent role change if already set
@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
     let userId = null;
     if (userRole) {
       // Try to get user_id from user_roles table (CSV and DB must match)
-      // If not present, fallback to finding in candidate_table or team_leader_table
+      // Si no está presente, buscar en ciudadano_table o institucion_table
       const row: any = db.prepare('SELECT * FROM user_roles WHERE stackAuthId = ?').get(stackAuthId);
       if (row && typeof row === 'object') {
         if ('user_id' in row) userId = row.user_id;

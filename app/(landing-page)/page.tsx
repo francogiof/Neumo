@@ -92,7 +92,7 @@ export default async function IndexPage() {
             features: [
               "Full source code (self-hostable)",
               "1 active job role",
-              "Up to 5 candidate evaluations/month",
+              "Hasta 5 evaluaciones de ciudadanos/mes",
               "Community support via GitHub",
               "No credit card required",
             ],
@@ -105,7 +105,7 @@ export default async function IndexPage() {
             description: "For growing teams with consistent hiring needs.",
             features: [
               "Unlimited job roles",
-              "Up to 200 candidate evaluations/month",
+              "Hasta 200 evaluaciones de ciudadanos/mes",
               "Scoring dashboard & audit logs",
               "Priority email support",
               "API access for ATS/HR integrations",

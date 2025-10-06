@@ -18,10 +18,13 @@ export async function POST(req: NextRequest) {
     }
     // Find user_id from user_roles table
     const db = require('@/lib/db').default;
-    const userRow = db.prepare('SELECT id FROM user_roles WHERE stackAuthId = ?').get(stackAuthId);
+    const userRow = db.prepare('SELECT id, stackAuthId, role FROM user_roles WHERE stackAuthId = ?').get(stackAuthId);
+    console.log('[API/role/get] DB userRow:', userRow);
     if (userRow && userRow.id) {
-      autoCreateProfileForRole(userRow.id, stackAuthId);
+      const profileResult = autoCreateProfileForRole(userRow.id, stackAuthId);
+      console.log('[API/role/get] autoCreateProfileForRole result:', profileResult);
     }
+    console.log('[API/role/get] Returning role:', userRole.role);
     return NextResponse.json({ role: userRole.role });
   } catch (error) {
     console.error('Server error in POST /api/role/get:', error);

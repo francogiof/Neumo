@@ -27,8 +27,8 @@ export default function SelectRolePage() {
         });
         if (res.ok) {
           const data = await res.json();
-          if (data.role === "candidate") router.replace("/dashboard/candidate");
-          else if (data.role === "team-leader") router.replace("/dashboard/team-leader");
+          if (data.role === "ciudadano") router.replace("/dashboard/ciudadano");
+          else if (data.role === "institucion") router.replace("/dashboard/institucion");
         }
       } catch {}
     }
@@ -62,7 +62,7 @@ export default function SelectRolePage() {
       if (!res.ok) throw new Error("Failed to assign role");
       setSuccess(true);
       // Redirect to dashboard based on role
-      window.location.href = role === "candidate" ? "/dashboard/candidate" : "/dashboard/team-leader";
+      window.location.href = role === "ciudadano" ? "/dashboard/ciudadano" : "/dashboard/institucion";
     } catch (err) {
       setError("Failed to assign role.");
     } finally {
@@ -88,6 +88,7 @@ export default function SelectRolePage() {
                 <option value="">Select a role</option>
                 <option value="candidate">Candidate</option>
                 <option value="team-leader">Team Leader</option>
+                <option value="ciudadano">Ciudadano</option>
               </select>
             </div>
             {error && <div className="text-red-500 text-sm">{error}</div>}

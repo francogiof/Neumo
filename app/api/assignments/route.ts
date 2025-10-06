@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { assignRequirementToCandidate } from '@/lib/models/candidateAssignments';
+import { assignRequirementToCiudadano } from '@/lib/models/ciudadanoAssignments';
 
 export async function POST(req: NextRequest) {
   try {
-    const { requirementId, candidateId, assignedBy, assignmentType } = await req.json();
-    if (!requirementId || !candidateId || !assignedBy) {
+    const { requirementId, ciudadanoId, assignedBy, assignmentType } = await req.json();
+    if (!requirementId || !ciudadanoId || !assignedBy) {
       return NextResponse.json({ error: 'Missing input' }, { status: 400 });
     }
-    const assignment = assignRequirementToCandidate(requirementId, candidateId, assignedBy, assignmentType || 'real');
+    const assignment = assignRequirementToCiudadano(requirementId, ciudadanoId, assignedBy, assignmentType || 'real');
     return NextResponse.json({ assignment });
   } catch (error) {
     console.log('[API/assignments] Error:', error);

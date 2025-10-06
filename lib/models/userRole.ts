@@ -4,7 +4,7 @@ import db from '../db';
 export type UserRole = {
   id: number;
   stackAuthId: string;
-  role: 'candidate' | 'team-leader';
+  role: 'ciudadano' | 'institucion';
 };
 
 // Ensure the table exists
@@ -12,12 +12,12 @@ export function initUserRoleTable() {
   db.prepare(`CREATE TABLE IF NOT EXISTS user_roles (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     stackAuthId TEXT UNIQUE NOT NULL,
-    role TEXT NOT NULL CHECK(role IN ('candidate', 'team-leader'))
+    role TEXT NOT NULL CHECK(role IN ('ciudadano', 'institucion'))
   )`).run();
 }
 
 // Add or update a user role
-export function upsertUserRole(stackAuthId: string, role: 'candidate' | 'team-leader') {
+export function upsertUserRole(stackAuthId: string, role: 'ciudadano' | 'institucion') {
   initUserRoleTable();
   db.prepare(`INSERT INTO user_roles (stackAuthId, role) VALUES (?, ?)
     ON CONFLICT(stackAuthId) DO UPDATE SET role=excluded.role`).run(stackAuthId, role);

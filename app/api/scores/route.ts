@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getScoresForCandidate, updateScoresForCandidate } from '@/lib/models/scores';
+import { getScoresForCiudadano, updateScoresForCiudadano } from '@/lib/models/scores';
 
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
-    const candidateId = searchParams.get('candidateId');
-    if (!candidateId) {
-      return NextResponse.json({ error: 'Missing candidateId' }, { status: 400 });
+    const ciudadanoId = searchParams.get('ciudadanoId');
+    if (!ciudadanoId) {
+      return NextResponse.json({ error: 'Missing ciudadanoId' }, { status: 400 });
     }
-    const scores = getScoresForCandidate(Number(candidateId));
+    const scores = getScoresForCiudadano(Number(ciudadanoId));
     return NextResponse.json({ scores });
   } catch (error) {
     console.log('[API/scores] Error:', error);
@@ -18,11 +18,11 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const { candidateId, updates } = await req.json();
-    if (!candidateId || !updates) {
+    const { ciudadanoId, updates } = await req.json();
+    if (!ciudadanoId || !updates) {
       return NextResponse.json({ error: 'Missing input' }, { status: 400 });
     }
-    const updated = updateScoresForCandidate(Number(candidateId), updates);
+    const updated = updateScoresForCiudadano(Number(ciudadanoId), updates);
     return NextResponse.json({ updated });
   } catch (error) {
     console.log('[API/scores] Error:', error);

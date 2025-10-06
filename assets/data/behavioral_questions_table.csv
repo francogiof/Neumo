@@ -5,4 +5,6 @@ behavioral_question_id,requirement_id,question,ideal_traits
 4,1,"Describe a situation where you had to learn a new technology quickly.","learning agility, adaptability, problem-solving"
 5,1,"How do you stay updated with the latest developments in machine learning?","continuous learning, curiosity, professional development"
 6,2,"How do you handle failure in a project?","resilience, learning from mistakes, growth mindset"
-7,2,"Describe a time you mentored a junior team member.","leadership, teaching, collaboration" 
+7,2,"Describe a time you mentored a junior team member.","leadership, teaching, collaboration"
+
+ciudadano_id,full_name,age,location,cv_path,linkedin,github,experience_years,education,personal_projects,introduction,cv_experience

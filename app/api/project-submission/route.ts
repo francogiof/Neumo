@@ -1,17 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { submitProject, listSubmissionsForCandidate, updateSubmissionScore, canSubmitProject } from '@/lib/models/userProjectSubmission';
+import { submitProject, listSubmissionsForCiudadano, updateSubmissionScore, canSubmitProject } from '@/lib/models/userProjectSubmission';
 
 export async function POST(req: NextRequest) {
   try {
-    const { candidateId, requirementId, submissionLink } = await req.json();
-    if (!candidateId || !requirementId || !submissionLink) {
+    const { ciudadanoId, requirementId, submissionLink } = await req.json();
+    if (!ciudadanoId || !requirementId || !submissionLink) {
       return NextResponse.json({ error: 'Missing input' }, { status: 400 });
     }
-    // Step progression: Only allow if candidate can submit
-    if (!canSubmitProject(candidateId)) {
-      return NextResponse.json({ error: 'Not eligible to submit project. Complete previous steps and meet score threshold.' }, { status: 403 });
+    // Step progression: Only allow if ciudadano puede enviar
+    if (!canSubmitProject(ciudadanoId)) {
+      return NextResponse.json({ error: 'No puede enviar proyecto aún' }, { status: 403 });
     }
-    const submission = submitProject(candidateId, requirementId, submissionLink);
+    const submission = submitProject(ciudadanoId, requirementId, submissionLink);
     return NextResponse.json({ submission });
   } catch (error) {
     console.log('[API/project-submission] Error:', error);
@@ -22,11 +22,11 @@ export async function POST(req: NextRequest) {
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
-    const candidateId = searchParams.get('candidateId');
-    if (!candidateId) {
-      return NextResponse.json({ error: 'Missing candidateId' }, { status: 400 });
+    const ciudadanoId = searchParams.get('ciudadanoId');
+    if (!ciudadanoId) {
+      return NextResponse.json({ error: 'Missing ciudadanoId' }, { status: 400 });
     }
-    const submissions = listSubmissionsForCandidate(Number(candidateId));
+    const submissions = listSubmissionsForCiudadano(Number(ciudadanoId));
     return NextResponse.json({ submissions });
   } catch (error) {
     console.log('[API/project-submission] Error:', error);

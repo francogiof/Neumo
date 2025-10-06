@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 
-export function useRequirementsForCandidate(userId: number) {
+export function useRequirementsForCiudadano(userId: number) {
   const [requirements, setRequirements] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {

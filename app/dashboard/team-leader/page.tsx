@@ -9,7 +9,7 @@ import { useState } from "react";
 const navigationItems: SidebarItem[] = [
 	{
 		name: "Overview",
-		href: "/dashboard/team-leader",
+		href: "/dashboard/institucion",
 		icon: Globe,
 		type: "item",
 	},
@@ -18,26 +18,26 @@ const navigationItems: SidebarItem[] = [
 		name: "Management",
 	},
 	{
-		name: "Candidates",
-		href: "/dashboard/team-leader/candidates",
+		name: "Ciudadanos",
+		href: "/dashboard/institucion/ciudadanos",
 		icon: Users,
 		type: "item",
 	},
 	{
 		name: "Jobs",
-		href: "/dashboard/team-leader/jobs",
+		href: "/dashboard/institucion/jobs",
 		icon: ShoppingBag,
 		type: "item",
 	},
 	{
 		name: "Segments",
-		href: "/dashboard/team-leader/segments",
+		href: "/dashboard/institucion/segments",
 		icon: Columns3,
 		type: "item",
 	},
 	{
 		name: "Regions",
-		href: "/dashboard/team-leader/regions",
+		href: "/dashboard/institucion/regions",
 		icon: Locate,
 		type: "item",
 	},
@@ -47,29 +47,29 @@ const navigationItems: SidebarItem[] = [
 	},
 	{
 		name: "Reports",
-		href: "/dashboard/team-leader/reports",
+		href: "/dashboard/institucion/reports",
 		icon: BarChart4,
 		type: "item",
 	},
 ];
 
-export default function TeamLeaderDashboard() {
+export default function InstitucionDashboard() {
 	// Example state for search/filter
 	const [search, setSearch] = useState("");
 
 	return (
-		<SidebarLayout items={navigationItems} basePath="/dashboard/team-leader">
+		<SidebarLayout items={navigationItems} basePath="/dashboard/institucion">
 			<div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 				<Card>
 					<CardHeader>
-						<CardTitle>Candidate Search</CardTitle>
+						<CardTitle>Búsqueda de Ciudadanos</CardTitle>
 						<CardDescription>
-							Find candidates by name, skill, or status.
+							Encuentra ciudadanos por nombre, habilidad o estado.
 						</CardDescription>
 					</CardHeader>
 					<CardContent>
 						<Input
-							placeholder="Search candidates..."
+							placeholder="Buscar ciudadanos..."
 							value={search}
 							onChange={(e) => setSearch(e.target.value)}
 						/>

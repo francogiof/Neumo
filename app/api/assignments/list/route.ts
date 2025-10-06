@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { listAssignmentsForCandidate } from '@/lib/models/candidateAssignments';
+import { listAssignmentsForCiudadano } from '@/lib/models/ciudadanoAssignments';
 
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
-    const candidateId = searchParams.get('candidateId');
-    if (!candidateId) {
-      return NextResponse.json({ error: 'Missing candidateId' }, { status: 400 });
+    const ciudadanoId = searchParams.get('ciudadanoId');
+    if (!ciudadanoId) {
+      return NextResponse.json({ error: 'Missing ciudadanoId' }, { status: 400 });
     }
-    const assignments = listAssignmentsForCandidate(Number(candidateId));
+    const assignments = listAssignmentsForCiudadano(Number(ciudadanoId));
     return NextResponse.json({ assignments });
   } catch (error) {
     console.log('[API/assignments/list] Error:', error);

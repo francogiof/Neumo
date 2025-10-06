@@ -42,6 +42,7 @@ export default async function DashboardPage() {
       const data = await res.json();
       if (data.role === 'candidate') redirect('/dashboard/candidate');
       else if (data.role === 'team-leader') redirect('/dashboard/team-leader');
+      else if (data.role === 'ciudadano') redirect('/dashboard/ciudadano');
       else redirect('/select-role');
     } else {
       redirect('/select-role');

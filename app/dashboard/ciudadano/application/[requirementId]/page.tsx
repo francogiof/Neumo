@@ -9,7 +9,7 @@ import ScreeningInterface from "@/components/screening-interface";
 const navigationItems: SidebarItem[] = [
 	{
 		name: "My Applications",
-		href: "/dashboard/candidate",
+		href: "/dashboard/ciudadano",
 		icon: Briefcase,
 		type: "item",
 	},
@@ -19,13 +19,13 @@ const navigationItems: SidebarItem[] = [
 	},
 	{
 		name: "Simulate Job Offer",
-		href: "/dashboard/candidate/simulate",
+		href: "/dashboard/ciudadano/simulate",
 		icon: PlusCircle,
 		type: "item",
 	},
 	{
 		name: "Premium Examples",
-		href: "/dashboard/candidate/examples",
+		href: "/dashboard/ciudadano/examples",
 		icon: Star,
 		type: "item",
 	},
@@ -35,13 +35,13 @@ const navigationItems: SidebarItem[] = [
 	},
 	{
 		name: "My Profile",
-		href: "/dashboard/candidate/profile",
+		href: "/dashboard/ciudadano/profile",
 		icon: User,
 		type: "item",
 	},
 ];
 
-export default function CandidateApplicationSubdashboard() {
+export default function CiudadanoApplicationSubdashboard() {
 	const [currentStep, setCurrentStep] = useState(0);
 	const [cvConfirmed, setCvConfirmed] = useState(false);
 	const [profile, setProfile] = useState<any>(null);
@@ -51,7 +51,7 @@ export default function CandidateApplicationSubdashboard() {
 	const [passesScreening, setPassesScreening] = useState<boolean | null>(null);
 	const [isGeneratingQuestions, setIsGeneratingQuestions] = useState(false);
 	const userId = 36;
-	const candidateId = 2; // TODO: Replace with dynamic lookup from session/profile if needed
+	const ciudadanoId = 2; // TODO: Replace with dynamic lookup from session/profile if needed
 
 	// Preview popup states
 	const [showPreviewPopup, setShowPreviewPopup] = useState(false);
@@ -212,7 +212,7 @@ export default function CandidateApplicationSubdashboard() {
 	const generateQuestions = async () => {
 		try {
 			setIsGeneratingQuestions(true);
-			console.log('[ApplicationPage] Registering screening steps for requirement:', requirementId, 'candidate:', candidateId);
+			console.log('[ApplicationPage] Registering screening steps for requirement:', requirementId, 'ciudadano:', ciudadanoId);
 			
 			const response = await fetch('/api/screening/register-steps', {
 				method: 'POST',
@@ -221,7 +221,7 @@ export default function CandidateApplicationSubdashboard() {
 				},
 				body: JSON.stringify({
 					requirementId: requirementId,
-					candidateId: candidateId
+					ciudadanoId: ciudadanoId
 				}),
 			});
 
@@ -289,7 +289,7 @@ export default function CandidateApplicationSubdashboard() {
 	// Show preview popup before interview starts
 	if (showPreviewPopup) {
 		return (
-			<SidebarLayout basePath="/dashboard/candidate" items={navigationItems}>
+			<SidebarLayout basePath="/dashboard/ciudadano" items={navigationItems}>
 				<div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
 					<div className="bg-gray-900 rounded-lg p-8 max-w-2xl w-full mx-4">
 						<div className="text-center mb-6">
@@ -424,7 +424,7 @@ export default function CandidateApplicationSubdashboard() {
 	}
 
 	return (
-		<SidebarLayout basePath="/dashboard/candidate" items={navigationItems}>
+		<SidebarLayout basePath="/dashboard/ciudadano" items={navigationItems}>
 			<div className="max-w-4xl mx-auto pt-2 pb-10">
 				<h1 className="text-2xl font-bold mb-6 ml-6">
 					Hiring Process Progress
