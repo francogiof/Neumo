@@ -15,15 +15,16 @@ interface MeteoDashboardProps {
 
 export default function MeteoDashboard({ items }: MeteoDashboardProps) {
   const mapRef = useRef<HTMLDivElement>(null);
-  const mapInstanceRef = useRef<any>(null); // Ref para la instancia del mapa
+  const mapInstanceRef = useRef<any>(null);
   const [airData, setAirData] = useState<Array<{ parametro: string; valor: number | string; unidad: string }>>([]);
-  const [showMap, setShowMap] = useState(true);
+  const [meteoData, setMeteoData] = useState<Array<any>>([]); // Para los datos meteorológicos
+  const [showView, setShowView] = useState<'map' | 'air' | 'meteo'>('map');
 
+  // --- MAPA ---
   useEffect(() => {
-    if (!showMap) return;
+    if (showView !== 'map') return;
     let leafletLoaded = false;
     const mapDiv = mapRef.current;
-    // Carga Leaflet solo en el cliente
     if (typeof window !== "undefined" && mapDiv) {
       if (!window.L) {
         const leafletCss = document.createElement("link");
@@ -43,11 +44,9 @@ export default function MeteoDashboard({ items }: MeteoDashboardProps) {
         initMap();
       }
     }
-
     function initMap() {
       if (!window.L || !mapDiv) return;
       const API_KEY = "b76a2862d586e02a39e13de8b6fac76f";
-      // Si ya existe una instancia, la eliminamos
       if (mapInstanceRef.current) {
         mapInstanceRef.current.remove();
         mapInstanceRef.current = null;
@@ -58,7 +57,6 @@ export default function MeteoDashboard({ items }: MeteoDashboardProps) {
         maxZoom: 18,
         attribution: '© OpenStreetMap'
       }).addTo(mapInstanceRef.current);
-      // Capas meteorológicas
       const temp = window.L.tileLayer(`https://maps.openweathermap.org/maps/2.0/weather/TA2/{z}/{x}/{y}?fill_bound=true&opacity=0.7&palette=-65:821692;-30:208cec;-10:20c4e8;0:23dddd;10:c2ff28;20:fff028;30:fc8014&appid=${API_KEY}`);
       const viento = window.L.tileLayer(`https://maps.openweathermap.org/maps/2.0/weather/WND/{z}/{x}/{y}?use_norm=true&arrow_step=16&appid=${API_KEY}`);
       const nubes = window.L.tileLayer(`https://maps.openweathermap.org/maps/2.0/weather/CL/{z}/{x}/{y}?opacity=0.6&appid=${API_KEY}`);
@@ -76,8 +74,6 @@ export default function MeteoDashboard({ items }: MeteoDashboardProps) {
       };
       window.L.control.layers(baseMaps, overlayMaps, { collapsed: false }).addTo(mapInstanceRef.current);
     }
-
-    // Limpieza al desmontar
     return () => {
       if (mapInstanceRef.current) {
         mapInstanceRef.current.remove();
@@ -85,10 +81,10 @@ export default function MeteoDashboard({ items }: MeteoDashboardProps) {
       }
       if (mapDiv) mapDiv.innerHTML = "";
     };
-  }, [showMap]);
+  }, [showView]);
 
+  // --- CONTAMINANTES DEL AIRE ---
   useEffect(() => {
-    // API de contaminantes del aire
     const API_KEY = "b76a2862d586e02a39e13de8b6fac76f";
     const lat = -16.3989;
     const lon = -71.5350;
@@ -110,6 +106,39 @@ export default function MeteoDashboard({ items }: MeteoDashboardProps) {
       .catch(() => setAirData([{ parametro: "N/A", valor: "N/A", unidad: "N/A" }]));
   }, []);
 
+  // --- DATOS METEOROLÓGICOS ---
+  useEffect(() => {
+    if (showView !== 'meteo') return;
+    const API_KEY = "b76a2862d586e02a39e13de8b6fac76f";
+    const CITY = "Arequipa,PE";
+    const URL = `https://api.openweathermap.org/data/2.5/weather?q=${CITY}&appid=${API_KEY}&units=metric`;
+    // Solo un registro por ahora, pero se puede hacer polling si lo deseas
+    fetch(URL)
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.main) {
+          const now = new Date();
+          const registro = {
+            "Hora": now.toLocaleTimeString(),
+            "Temperatura (°C)": data.main.temp,
+            "Sensación térmica (°C)": data.main.feels_like,
+            "Temperatura mínima (°C)": data.main.temp_min,
+            "Temperatura máxima (°C)": data.main.temp_max,
+            "Humedad (%)": data.main.humidity,
+            "Presión (hPa)": data.main.pressure,
+            "Velocidad viento (m/s)": data.wind.speed,
+            "Dirección viento (°)": data.wind.deg ?? "N/A",
+            "Nubosidad (%)": data.clouds?.all ?? "N/A",
+            "Visibilidad (m)": data.visibility ?? "N/A",
+          };
+          setMeteoData([registro]);
+        } else {
+          setMeteoData([]);
+        }
+      })
+      .catch(() => setMeteoData([]));
+  }, [showView]);
+
   const showSidebar = Array.isArray(items) && items.length > 0;
 
   return (
@@ -119,7 +148,7 @@ export default function MeteoDashboard({ items }: MeteoDashboardProps) {
           <div className="w-80 bg-card p-6 flex flex-col gap-4 border-r border-muted">
             <button
               className="w-full mb-2 bg-primary text-primary-foreground rounded px-4 py-2 font-semibold hover:bg-primary/90 transition"
-              onClick={() => setShowMap(true)}
+              onClick={() => setShowView('map')}
             >
               Ver mapa
             </button>
@@ -131,13 +160,13 @@ export default function MeteoDashboard({ items }: MeteoDashboardProps) {
                 <div className="space-y-2">
                   <button
                     className="w-full bg-secondary text-secondary-foreground rounded px-4 py-2 font-semibold hover:bg-secondary/90 transition"
-                    onClick={() => setShowMap(false)}
+                    onClick={() => setShowView('air')}
                   >
                     Ver calidad de aire
                   </button>
                   <button
                     className="w-full bg-accent text-accent-foreground rounded px-4 py-2 font-semibold hover:bg-accent/90 transition"
-                    // onClick={() => ...} // lógica futura para datos meteorológicos
+                    onClick={() => setShowView('meteo')}
                   >
                     Datos meteorológicos
                   </button>
@@ -174,11 +203,11 @@ export default function MeteoDashboard({ items }: MeteoDashboardProps) {
               <button className="bg-primary text-primary-foreground rounded px-3 py-1 font-semibold hover:bg-primary/90 transition">Actualizar</button>
             </div>
           </div>
-          {/* Mostrar ambos cuadros, pero solo uno visible según showMap */}
-          <div className={showMap ? "block w-full" : "hidden w-full"}>
+          {/* Vistas condicionales */}
+          <div className={showView === 'map' ? "block w-full" : "hidden w-full"}>
             <div ref={mapRef} id="map" style={{ width: "100%", height: "600px", borderRadius: "16px", marginTop: "64px", boxShadow: "0 2px 16px #0002" }} />
           </div>
-          <div className={!showMap ? "block w-full max-w-xl mx-auto mt-8" : "hidden w-full max-w-xl mx-auto mt-8"}>
+          <div className={showView === 'air' ? "block w-full max-w-xl mx-auto mt-8" : "hidden w-full max-w-xl mx-auto mt-8"}>
             <Card>
               <CardHeader>
                 <CardTitle>💨 Contaminantes del aire en Arequipa</CardTitle>
@@ -202,6 +231,37 @@ export default function MeteoDashboard({ items }: MeteoDashboardProps) {
                     ))}
                   </tbody>
                 </table>
+              </CardContent>
+            </Card>
+          </div>
+          <div className={showView === 'meteo' ? "block w-full max-w-xl mx-auto mt-8" : "hidden w-full max-w-xl mx-auto mt-8"}>
+            <Card>
+              <CardHeader>
+                <CardTitle>🌤️ Datos meteorológicos en Arequipa</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {meteoData.length > 0 ? (
+                  <table className="w-full text-sm border rounded overflow-hidden">
+                    <thead>
+                      <tr className="bg-muted">
+                        {Object.keys(meteoData[0]).map((key) => (
+                          <th key={key} className="py-2 px-3 text-left">{key}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {meteoData.map((row, idx) => (
+                        <tr key={idx} className="border-b">
+                          {Object.values(row).map((val, i) => (
+                            <td key={i} className="py-2 px-3">{String(val)}</td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <div className="text-center text-muted-foreground">No hay datos meteorológicos disponibles.</div>
+                )}
               </CardContent>
             </Card>
           </div>
