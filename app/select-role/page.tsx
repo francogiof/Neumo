@@ -85,10 +85,9 @@ export default function SelectRolePage() {
                 onChange={e => setRole(e.target.value)}
                 required
               >
-                <option value="">Select a role</option>
-                <option value="candidate">Candidate</option>
-                <option value="team-leader">Team Leader</option>
+                <option value="">Selecciona un rol</option>
                 <option value="ciudadano">Ciudadano</option>
+                <option value="institucion">Institución</option>
               </select>
             </div>
             {error && <div className="text-red-500 text-sm">{error}</div>}
